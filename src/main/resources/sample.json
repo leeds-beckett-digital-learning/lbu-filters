@@ -1,0 +1,25 @@
+{
+ "stuff":
+ {
+	"f": 23.45,
+	"bf": false,
+	"bt": true,
+	"list": [
+		"one\u02A3",
+		"two",
+		"three"
+	],
+	"twodlist": [
+		[1, 2, 3], [4, 5, 6], [7, 8, 9]
+	]
+ },
+ "results": [
+  {
+   "key": "OutcomeDefinition.WeightedTotal.title",    "baseValue": "Weighted Total",    "customValue": null,    "lastUpdated": null
+  },   {
+   "key": "OutcomeDefinition.Total.title",    "baseValue": "Total",    "customValue": null,    "lastUpdated": null
+  }
+ ],  "paging": {
+  "offset": 0,   "limit": 20000,   "nextPage": "",   "previousPage": "",   "count": 14200
+ },  "isPublished": true
+}
