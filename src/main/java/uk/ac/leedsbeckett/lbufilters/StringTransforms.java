@@ -28,6 +28,47 @@ import org.w3c.dom.NodeList;
 public class StringTransforms
 {
 
+  public static String jsonString( String s )
+  {
+    StringBuilder hex = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
+    sb.append( "\"" );
+    char[] a = s.toCharArray();
+    for ( int i=0; i<a.length; i++ )
+    {
+      if ( a[i] == '\\' )
+        sb.append( "\\\\" );
+      else if ( a[i] == '"' )
+        sb.append( "\"" );
+      else if ( a[i] >= ' ' && a[i] <= '~')
+        sb.append( a[i] );
+      else if ( a[i] >= '¡' )
+        sb.append( a[i] );
+      else if ( a[i] == '\b' )
+        sb.append( "\\b" );
+      else if ( a[i] == '\f' )
+        sb.append( "\\f" );
+      else if ( a[i] == '\n' )
+        sb.append( "\\n" );
+      else if ( a[i] == '\r' )
+        sb.append( "\\r" );
+      else if ( a[i] == '\t' )
+        sb.append( "\\t" );
+      else
+      {
+        // hex escape needed
+        hex.setLength( 0 );
+        hex.append( Integer.toHexString( (int)a[i] ) );
+        while ( hex.length() < 4 )
+          hex.insert( 0, '0' );
+        sb.append( "\\u" );
+        sb.append(  hex.toString() );
+      }
+    }
+    sb.append( "\"" );
+    return sb.toString();
+  }
+  
   public static String multiReplace( String source, NodeList o )
   {
     if ( o == null ) return "Can't find replace. No patterns object provided.";

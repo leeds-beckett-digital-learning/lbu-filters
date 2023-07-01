@@ -87,6 +87,7 @@ public class Xslt extends ChunkedFilterReader implements Parameterizable
 
     SAXParserFactory spf = SAXParserFactory.newInstance();
     spf.setValidating( false );
+    spf.setNamespaceAware( true );
     SAXParser sp = spf.newSAXParser();
     InputSource s = new InputSource( new NoCloseReaderWrapper( in ) );
     System.out.println( "Saxsource getXMLReader " + sp.getXMLReader() );
@@ -107,6 +108,7 @@ public class Xslt extends ChunkedFilterReader implements Parameterizable
 
       TransformerFactory tFactory = TransformerFactory.newInstance();
       System.err.println( "TransformerFactory = " + tFactory.getClass().toString() );
+
       // Cannot do this in ant because of Java security settings
       //tFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false );
       // Can do this in ant so long as using very recent JDK that has built in

@@ -31,7 +31,7 @@ public abstract class ChunkedFilterReader extends FilterReader
   private boolean started = false;
   private boolean ended = false;
   private final CharArrayWriter chunkWriter = new CharArrayWriter();
-  private CharArrayReader chunkReader;
+  private CharArrayReader chunkReader = new CharArrayReader( new char[] {} );
 
   /**
    * Standard FilterReader constructor.

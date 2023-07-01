@@ -171,6 +171,7 @@ public class JsonToXml extends ChunkedXmlFilterReader
       {
         case VALUE_NULL:
           writer.writeAttribute( "t", "n" );
+          writer.writeCharacters( "null" );
           break;
         case VALUE_STRING:
           writer.writeAttribute( "t", "s" );
