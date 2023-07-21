@@ -42,7 +42,7 @@ public class StringTransforms
         sb.append( "\"" );
       else if ( a[i] >= ' ' && a[i] <= '~')
         sb.append( a[i] );
-      else if ( a[i] >= '¡' )
+      else if ( a[i] >= '\u00a1' )
         sb.append( a[i] );
       else if ( a[i] == '\b' )
         sb.append( "\\b" );
