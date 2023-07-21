@@ -104,23 +104,24 @@ public class StringTransforms
   
   public static String propertyComment( String in )
   {
-    return escapePropertyString( in, true, false, true );
+    return escapePropertyString( in, true, false, true, false );
   }
 
   public static String propertyKey( String in )
   {
-    return escapePropertyString( in, false, true, true );
+    return escapePropertyString( in, false, true, true, true );
   }
 
   public static String propertyValue( String in )
   {
-    return escapePropertyString( in, false, false, true );
+    return escapePropertyString( in, false, false, true, false );
   }
 
   private static String escapePropertyString( String in,
           boolean comment, 
           boolean escapeSpace, 
-          boolean escapeUnicode )
+          boolean escapeUnicode,
+          boolean escapeSpecial )
   {
     int len = in.length();
     int bufLen = len * 2;
@@ -135,7 +136,7 @@ public class StringTransforms
     if ( needshash )
       builder.append( "# " );
     for ( int i = 0; i < a.length; i++ )
-      escapePropertyCharacter( builder, a[ i ], i == 0, i == (a.length-1), true, needshash, escapeSpace, escapeUnicode );      
+      escapePropertyCharacter( builder, a[ i ], i == 0, i == (a.length-1), true, needshash, escapeSpace, escapeUnicode, escapeSpecial );      
     return builder.toString();
   }
 
@@ -147,7 +148,8 @@ public class StringTransforms
           boolean comment, 
           boolean needshash, 
           boolean escapeSpace, 
-          boolean escapeUnicode )
+          boolean escapeUnicode,
+          boolean escapeSpecial )
   {
     // Handle common case first, selecting largest block that
     // avoids the specials below
@@ -203,9 +205,12 @@ public class StringTransforms
       case ':': // Fall through
       case '#': // Fall through
       case '!':
-        outBuffer.append( '\\' );
-        outBuffer.append( aChar );
-        break;
+        if ( escapeSpecial )
+        {
+          outBuffer.append( '\\' );
+          outBuffer.append( aChar );
+          break;
+        }
       default:
         if ( ( ( aChar < 0x0020 ) || ( aChar > 0x007e ) ) & escapeUnicode )
         {
