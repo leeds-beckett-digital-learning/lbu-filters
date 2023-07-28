@@ -15,24 +15,19 @@
  */
 package uk.ac.leedsbeckett.lbufilters;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import uk.ac.leedsbeckett.lbufilters.util.ChunkedFilterReader;
 
 /**
  *
  * @author maber01
  */
-public class PropertiesToXml extends ChunkedFilterReader
+public class NormaliseProperties extends ChunkedFilterReader
 {
-  public PropertiesToXml( Reader in )
+  public NormaliseProperties( Reader in )
   {
     super( in );
   }
@@ -42,9 +37,7 @@ public class PropertiesToXml extends ChunkedFilterReader
   {
     Properties props = new Properties();
     props.load( in );
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    props.storeToXML( baos, "Normalised properties file.", "UTF-8" );
-    writer.write( new String( baos.toByteArray(), "UTF-8" ) );
+    props.store( writer, "Normalised properties file." );
   }
 
   @Override

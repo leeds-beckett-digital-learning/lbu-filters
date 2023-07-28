@@ -35,6 +35,7 @@ import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 import uk.ac.leedsbeckett.lbufilters.JsonPrettyPrint;
 import uk.ac.leedsbeckett.lbufilters.JsonToXml;
+import uk.ac.leedsbeckett.lbufilters.NormaliseProperties;
 import uk.ac.leedsbeckett.lbufilters.PropertiesToXml;
 import uk.ac.leedsbeckett.lbufilters.Xslt;
 
@@ -102,6 +103,9 @@ public class Demo
 //      testFilter( JsonToXml.class.getConstructor( Reader.class ), 
 //                  "sample.json", StandardCharsets.UTF_8, 
 //                   "sample.json.xml", StandardCharsets.UTF_8, null );
+      testFilter( NormaliseProperties.class.getConstructor( Reader.class ), 
+                  "sample.properties", StandardCharsets.ISO_8859_1, 
+                   "nomalised.properties", StandardCharsets.UTF_8, null );
       testFilter( PropertiesToXml.class.getConstructor( Reader.class ), 
                   "sample.properties", StandardCharsets.ISO_8859_1, 
                    "sample.properties.xml", StandardCharsets.UTF_8, null );
