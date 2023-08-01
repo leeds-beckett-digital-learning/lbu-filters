@@ -15,7 +15,8 @@
  */
 package uk.ac.leedsbeckett.lbufilters;
 
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -26,6 +27,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 import org.xml.sax.InputSource;
@@ -66,7 +69,18 @@ public class GeneralFilter extends ChunkedFilterReader implements Parameterizabl
   @Override
   public void firstChunk( Writer writer ) throws IOException
   {
-    this.tokenise.setReader( this.in );
+    if ( tokenise == null )
+    {
+      if ( spec == null )
+        throw new IOException( "No specification parameter was specified." );
+      File file = new File( spec );
+      if ( !file.exists() )
+        throw new IOException( "Specied spec file does not exist." );
+      if ( !file.isFile() )
+        throw new IOException( "Specied spec is not a file." );
+      setSpec( new FileReader( file ) );
+    }
+    tokenise.setReader( this.in );
   }
 
   @Override
