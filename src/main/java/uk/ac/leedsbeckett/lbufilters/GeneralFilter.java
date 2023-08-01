@@ -157,7 +157,7 @@ public class GeneralFilter extends ChunkedFilterReader implements Parameterizabl
   
   private static final String TESTTEXT = 
 "# comment\n" +
-" # comment = with equals \n" +
+" # comment = with equals \n\n\n" +
 "\r" +
 "thingy=whatsit\r\n" +
 "doodah =thingumy=sommat\n" +
