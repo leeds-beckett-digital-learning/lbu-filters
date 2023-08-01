@@ -124,36 +124,43 @@ public class GeneralFilter extends ChunkedFilterReader implements Parameterizabl
 "  <delimiter value=\"&#x0d;&#x0a;\"/>\n" +
 "  <delimiter value=\"&#x0d;\"/>\n" +
 "  <delimiter value=\"&#x0a;\"/>\n" +
-"  <switch>\n" +
+"  <choose div=\"2\" mod=\"0\">\n" +
 "    <when>\n" +
-"      <contains index=\"0\" substring=\"#\"/>\n" +
-"      <upper/>\n" +
-//"      <split spec=\"split on first =\">\n" +
-//"        <index from=\"1\" to=\"1\">\n" +
-//"          <copy/>\n" +
-//"        </index>\n" +
-//"        <index from=\"2\" to=\"2\">\n" +
-//"          <sequence>\n" +
-//"            <replace match=\"\" with=\"\"/>\n" +
-//"          </sequence>\n" +
-//"        </index>\n" +
-//"        <index from=\"3\">\n" +
-//"          <copy/>   \n" +
-//"        </index>\n" +
-//"      </split>\n" +
+"      <or><matches spec=\"^[ \t]*#.*$\"/><matches spec=\"^[ \t]*$\"/></or>\n" +
+"      <upper><output/></upper>\n" +
 "    </when>\n" +
 "    <otherwise>\n" +
-"      <copy/>\n" +
+"      <choose>\n" +
+"        <when>\n" +
+"          <matches index=\"0\" spec=\"thingy[ ]*.*\"/>" +
+"          <output/>"+
+"        </when>\n" +          
+"        <otherwise>\n" +          
+"          <split spec=\"((?&lt;=\\=))\" limit=\"2\">\n" +
+"            <output from=\"0\" to=\"0\"/>\n" +
+"            <literal>{</literal>\n" +
+"            <replace from=\"1\" to=\"1\" match=\"=\" with=\"\\\\=\">"+ 
+"              <replace match=\"m\" with=\"M\">"+ 
+"                <output/>"+
+"              </replace>\n" +
+"            </replace>\n" +
+"            <literal>}</literal>\n" +
+"          </split>\n" +
+"        </otherwise>\n" +          
+"      </choose>\n" +          
+          
 "    </otherwise>\n" +
-"  </switch>\n" +
+"  </choose>\n" +
+"  <output div=\"2\" mod=\"1\"/>\n" +
 "</tokenise>\n" +
 "";
   
   private static final String TESTTEXT = 
 "# comment\n" +
+" # comment = with equals \n" +
 "\r" +
 "thingy=whatsit\r\n" +
-"doodah=thingumy\n" +
+"doodah =thingumy=sommat\n" +
 "";
   
 }

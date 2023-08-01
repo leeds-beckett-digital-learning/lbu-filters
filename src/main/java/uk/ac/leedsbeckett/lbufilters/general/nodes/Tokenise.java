@@ -27,10 +27,9 @@ import uk.ac.leedsbeckett.lbufilters.general.Processor;
  *
  * @author maber01
  */
-public class Tokenise implements Element
+public class Tokenise extends Processor
 {
   ArrayList<Delimiter> delimiters = new ArrayList<>();
-  Processor processor;
   
   Reader reader;
   StringBuilder pushedBack = new StringBuilder();
@@ -98,8 +97,8 @@ public class Tokenise implements Element
       r[0] = str;
       r[1] = "";
     }
-    
-    processor.process( writer, r );
+
+    this.processChildren( writer, r );
     
     return true;
   }
@@ -141,10 +140,9 @@ public class Tokenise implements Element
     delimiters.add( d );
   }
   
-  public void addElement( Processor p )
+  @Override
+  public void process( Writer writer, String[] s ) throws IOException
   {
-    if ( processor != null )
-      throw new IllegalArgumentException( "Already has a processor." );
-    processor = p;
+    throw new UnsupportedOperationException( "Tokenise doesn't implement 'process'." );
   }
 }

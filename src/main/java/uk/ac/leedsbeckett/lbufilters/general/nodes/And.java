@@ -15,23 +15,28 @@
  */
 package uk.ac.leedsbeckett.lbufilters.general.nodes;
 
-import java.io.IOException;
-import java.io.Writer;
-import uk.ac.leedsbeckett.lbufilters.general.Processor;
+import java.util.ArrayList;
+import uk.ac.leedsbeckett.lbufilters.general.BooleanElement;
 
 /**
  *
  * @author maber01
  */
-public class Upper extends Processor
+public class And implements BooleanElement
 {
+  ArrayList<BooleanElement> bools = new ArrayList<>();
+  
   @Override
-  public void process( Writer writer, String[] s ) throws IOException
+  public boolean getResult( String[] s )
   {
-    String[] out = new String[s.length];
-    for ( int i=0; i<s.length; i++ )
-      out[i] = s[i].toUpperCase();
-    processChildren( writer, out );
+    for ( BooleanElement bool : bools )
+      if ( !bool.getResult( s ) )
+        return false;
+    return true;
   }
   
+  public void addElement( BooleanElement bool )
+  {
+    bools.add( bool );
+  }
 }

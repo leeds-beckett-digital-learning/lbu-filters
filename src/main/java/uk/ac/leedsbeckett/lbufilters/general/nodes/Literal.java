@@ -15,44 +15,30 @@
  */
 package uk.ac.leedsbeckett.lbufilters.general.nodes;
 
-import uk.ac.leedsbeckett.lbufilters.general.Processor;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import uk.ac.leedsbeckett.lbufilters.general.BooleanElement;
+import uk.ac.leedsbeckett.lbufilters.general.Processor;
 
 /**
  *
  * @author maber01
  */
-public class Switch extends Processor
+public class Literal extends Processor
 {
-  ArrayList<When> whens = new ArrayList<>();
-  Otherwise otherwise = null;
+  String literal="";
   
+  public void addText( String text )
+  {
+    if ( text != null )
+      literal = literal + text;
+  }
+
   @Override
   public void process( Writer writer, String[] s ) throws IOException
   {
-    for ( When w : whens )
-    {
-      if ( w.getResult( s ) )
-      {
-        w.process( writer, s );
-        return;
-      }
-    }
-    if ( otherwise != null )
-      otherwise.process( writer, s );
+    writer.write( literal );
   }
-
-  public void addElement( When when )
-  {
-    whens.add( when );
-  }
-
-  public void addElement( Otherwise otherwise )
-  {
-    if ( this.otherwise != null )
-      throw new IllegalArgumentException( "Only one otherwise element allowed." );
-    this.otherwise = otherwise;
-  }  
 }

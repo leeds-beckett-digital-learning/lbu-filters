@@ -142,6 +142,34 @@ public class Handler extends DefaultHandler
     stack.push( current );
   }
 
+  @Override
+  public void characters( char[] ch, int start, int length ) throws SAXException
+  {
+    Element parent = stack.peek();
+    Class pclass = parent.getClass();
+    Method adder = null;
+    try
+    {
+      adder = pclass.getMethod( "addText", String.class );
+    }
+    catch ( NoSuchMethodException | SecurityException ex )
+    {
+      adder = null;
+    }
+    if ( adder == null )
+      return;
+    try
+    {
+      adder.invoke( parent, String.valueOf( ch, start, length ) );
+    }
+    catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException ex )
+    {
+      throw new SAXException( "Failed to add text here." );
+    }
+  }
+
+  
+  
   public Tokenise getTokenise()
   {
     return root;

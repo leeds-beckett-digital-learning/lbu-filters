@@ -15,23 +15,28 @@
  */
 package uk.ac.leedsbeckett.lbufilters.general.nodes;
 
-import java.io.IOException;
-import java.io.Writer;
-import uk.ac.leedsbeckett.lbufilters.general.Processor;
+import java.util.ArrayList;
+import uk.ac.leedsbeckett.lbufilters.general.BooleanElement;
 
 /**
  *
  * @author maber01
  */
-public class Copy extends Processor
+public class Or implements BooleanElement
 {
-
+  ArrayList<BooleanElement> bools = new ArrayList<>();
+  
   @Override
-  public void process( Writer writer, String[] s ) throws IOException
+  public boolean getResult( String[] s )
   {
-    for ( String part : s )
-      if ( part != null )
-        writer.write( part );
+    for ( BooleanElement bool : bools )
+      if ( bool.getResult( s ) )
+        return true;
+    return false;
   }
   
+  public void addElement( BooleanElement bool )
+  {
+    bools.add( bool );
+  }
 }

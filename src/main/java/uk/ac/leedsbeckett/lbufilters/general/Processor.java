@@ -17,6 +17,7 @@ package uk.ac.leedsbeckett.lbufilters.general;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 
 /**
  *
@@ -24,5 +25,79 @@ import java.io.Writer;
  */
 public abstract class Processor implements Element
 {
+  int from = Integer.MIN_VALUE;
+  int to = Integer.MAX_VALUE;
+  int div = 0;
+  int mod = 0;
+  
+  ArrayList<Processor> processors = new ArrayList<>();
+  
+  public void setFrom( String from )
+  {
+    this.from = Integer.parseInt( from );
+  }
+
+  public void setTo( String to )
+  {
+    this.to = Integer.parseInt( to );
+  }
+
+  public void setDiv( String div )
+  {
+    this.div = Integer.parseInt( div );
+  }
+
+  public void setMod( String mod )
+  {
+    this.mod = Integer.parseInt( mod );
+  }
+
+  public int getFrom()
+  {
+    return from;
+  }
+
+  public int getTo()
+  {
+    return to;
+  }
+
+  public int getDiv()
+  {
+    return div;
+  }
+
+  public int getMod()
+  {
+    return mod;
+  }
+  
+  public boolean isIndexMatch( int i )
+  {
+    if ( i < from ) return false;
+    if ( i > to ) return false;
+    if ( div <=0 ) return true;
+    int m = i % div;
+    return m == mod;
+  }
+
+  public void addElement( Processor processor )
+  {
+    processors.add( processor );
+  }
+  
   public abstract void process( Writer writer, String[] s ) throws IOException;
+
+  public void processChildren( Writer writer, String[] output ) throws IOException
+  {
+    for ( Processor p : processors )
+    {
+      ArrayList<String> list = new ArrayList<>();
+      for ( int i=0; i<output.length; i++ )
+        if ( p.isIndexMatch( i ) )
+          list.add( output[i] );
+      if ( !list.isEmpty() )
+        p.process(writer, list.toArray(String[]::new) );
+    }
+  }
 }

@@ -23,15 +23,15 @@ import uk.ac.leedsbeckett.lbufilters.general.Processor;
  *
  * @author maber01
  */
-public class Upper extends Processor
+public class Output extends Processor
 {
+
   @Override
   public void process( Writer writer, String[] s ) throws IOException
   {
-    String[] out = new String[s.length];
-    for ( int i=0; i<s.length; i++ )
-      out[i] = s[i].toUpperCase();
-    processChildren( writer, out );
+    for ( String part : s )
+      if ( part != null )
+        writer.write( part );
   }
   
 }

@@ -15,36 +15,32 @@
  */
 package uk.ac.leedsbeckett.lbufilters.general.nodes;
 
-import java.io.IOException;
-import java.io.Writer;
-import uk.ac.leedsbeckett.lbufilters.general.Element;
-import uk.ac.leedsbeckett.lbufilters.general.Processor;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import uk.ac.leedsbeckett.lbufilters.general.BooleanElement;
 
 /**
  *
  * @author maber01
  */
-public class Index implements Element
+public class Matches implements BooleanElement
 {
-  Processor processor = null;
-  String from;
-  String to;
-
-  public void setFrom( String from )
+  int index=0;
+  Predicate<String> spec;
+  
+  public void setIndex( String index )
   {
-    this.from = from;
+    this.index = Integer.parseInt( index );
   }
 
-  public void setTo( String to )
+  public void setSpec( String s )
   {
-    this.to = to;
+    spec = Pattern.compile( s ).asMatchPredicate();
   }
   
-  
-  
-  public void addElement( Processor p )
+  @Override
+  public boolean getResult( String[] s )
   {
-    if ( processor != null )
-      throw new IllegalArgumentException( "Already has a processor." );
+    return spec.test( s[index] );
   }
 }

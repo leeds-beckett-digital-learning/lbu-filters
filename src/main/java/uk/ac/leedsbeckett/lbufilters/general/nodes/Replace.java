@@ -38,11 +38,13 @@ public class Replace extends Processor
   {
     this.with = with;
   }
-  
-  
-  
+
   @Override
   public void process( Writer writer, String[] s ) throws IOException
   {
+    String[] out = new String[s.length];
+    for ( int i =0; i<s.length; i++ )
+      out[i] = s[i].replaceAll( match, with );
+    processChildren( writer, out );
   }  
 }

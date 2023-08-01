@@ -18,6 +18,7 @@ package uk.ac.leedsbeckett.lbufilters.general.nodes;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import uk.ac.leedsbeckett.lbufilters.general.Processor;
 
 /**
@@ -26,21 +27,22 @@ import uk.ac.leedsbeckett.lbufilters.general.Processor;
  */
 public class Split extends Processor
 {
-  ArrayList<Index> indices = new ArrayList<>();
-  String spec;
+  Pattern spec;
+  int limit=0;
   
   public void setSpec( String s )
   {
-    spec = s;
+    spec = Pattern.compile( s );
   }
   
-  public void addElement( Index i )
+  public void setLimit( String l )
   {
-    indices.add( i );
-  }  
-
+    limit = Integer.parseInt( l );
+  }
+  
   @Override
   public void process( Writer writer, String[] s ) throws IOException
   {
+    processChildren( writer, spec.split( s[0], limit ) );
   }
 }

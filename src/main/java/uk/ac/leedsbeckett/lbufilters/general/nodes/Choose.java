@@ -15,26 +15,44 @@
  */
 package uk.ac.leedsbeckett.lbufilters.general.nodes;
 
+import uk.ac.leedsbeckett.lbufilters.general.Processor;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import uk.ac.leedsbeckett.lbufilters.general.Processor;
 
 /**
  *
  * @author maber01
  */
-public class Sequence extends Processor
+public class Choose extends Processor
 {
-  ArrayList<Processor> processors = new ArrayList<>();
+  ArrayList<When> whens = new ArrayList<>();
+  Otherwise otherwise = null;
   
   @Override
   public void process( Writer writer, String[] s ) throws IOException
   {
-  }  
-
-  public void addElement( Processor p )
-  {
-    processors.add( p );
+    for ( When w : whens )
+    {
+      if ( w.getResult( s ) )
+      {
+        w.process( writer, s );
+        return;
+      }
+    }
+    if ( otherwise != null )
+      otherwise.process( writer, s );
   }
+
+  public void addElement( When when )
+  {
+    whens.add( when );
+  }
+
+  public void addElement( Otherwise otherwise )
+  {
+    if ( this.otherwise != null )
+      throw new IllegalArgumentException( "Only one otherwise element allowed." );
+    this.otherwise = otherwise;
+  }  
 }

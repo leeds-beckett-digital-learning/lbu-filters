@@ -23,7 +23,7 @@ import uk.ac.leedsbeckett.lbufilters.general.BooleanElement;
  */
 public class Contains implements BooleanElement
 {
-  int index;
+  int index=0;
   String substring;
 
   public void setIndex( String index )
