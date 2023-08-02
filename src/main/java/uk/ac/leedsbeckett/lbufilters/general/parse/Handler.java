@@ -89,6 +89,9 @@ public class Handler extends DefaultHandler
 
     for ( int i=0; i<attributes.getLength(); i++ )
     {
+      if ( "id".equals( attributes.getLocalName( i ) ) )
+        continue;
+      
       String setterName = "set" + capitalise( attributes.getLocalName( i ) );
       try
       {

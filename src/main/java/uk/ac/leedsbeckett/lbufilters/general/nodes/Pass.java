@@ -15,10 +15,20 @@
  */
 package uk.ac.leedsbeckett.lbufilters.general.nodes;
 
+import uk.ac.leedsbeckett.lbufilters.general.Processor;
+import java.io.IOException;
+import java.io.Writer;
+
 /**
  *
  * @author maber01
  */
-public class Otherwise extends Pass
+public class Pass extends Processor
 {
+
+  @Override
+  public void process( Writer writer, String[] s ) throws IOException
+  {
+    processChildren( writer, s );
+  }
 }
