@@ -97,7 +97,8 @@ public class Handler extends DefaultHandler
       }
       catch ( NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex )
       {
-        throw new SAXException( "Class " + c.toString() + " doesn't have method " + setterName );      
+        ex.printStackTrace( System.err );
+        throw new SAXException( "Class " + c.toString() + " failed calling " + setterName );      
       }
     }
     
@@ -136,7 +137,8 @@ public class Handler extends DefaultHandler
     }
     catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException ex )
     {
-      throw new SAXException( "Failed to add " + localName + " here." );
+      ex.printStackTrace( System.err );
+      throw new SAXException( "Failed to add " + localName + " " + current.getClass().toString() + " to " + parent.getClass().toString() );
     }
     
     stack.push( current );

@@ -15,23 +15,28 @@
  */
 package uk.ac.leedsbeckett.lbufilters.general.nodes;
 
-import java.io.IOException;
-import java.io.Writer;
-import uk.ac.leedsbeckett.lbufilters.general.Processor;
+import java.util.ArrayList;
+import uk.ac.leedsbeckett.lbufilters.general.BooleanElement;
 
 /**
  *
  * @author maber01
  */
-public class Output extends Processor
+public class Not implements BooleanElement
 {
-
+  ArrayList<BooleanElement> bools = new ArrayList<>();
+  
   @Override
-  public void process( Writer writer, String[] s ) throws IOException
+  public boolean getResult( String[] s )
   {
-    for ( int i=0; i<s.length; i++ )
-//      if ( isIndexMatch( i ) )
-        writer.write( s[i] );
+    BooleanElement bool = bools.get( 0 );
+    return !bool.getResult( s );
   }
   
+  public void addElement( BooleanElement bool )
+  {
+    if ( bools.size() == 1 )
+      throw new IllegalArgumentException( "Not element can only contain one boolean element." );
+    bools.add( bool );
+  }
 }

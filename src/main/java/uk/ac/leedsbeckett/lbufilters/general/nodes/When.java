@@ -27,13 +27,11 @@ import uk.ac.leedsbeckett.lbufilters.general.BooleanElement;
 public class When extends Processor implements BooleanElement
 {
   BooleanElement be = null;
-  Processor processor = null;
   
   @Override
   public void process( Writer writer, String[] s ) throws IOException
   {
-    if ( processor != null )
-      processor.process( writer, s );
+    processChildren( writer, s );
   }
 
   @Override
@@ -45,13 +43,6 @@ public class When extends Processor implements BooleanElement
   }
 
   
-  public void addElement( Processor p )
-  {
-    if ( processor != null )
-      throw new IllegalArgumentException( "Already has a processor." );
-    processor = p;
-  }
-
   public void addElement( BooleanElement be )
   {
     if ( this.be != null )

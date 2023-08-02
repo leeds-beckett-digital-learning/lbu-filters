@@ -25,19 +25,10 @@ import java.io.Writer;
  */
 public class Otherwise extends Processor
 {
-  Processor processor = null;
 
   @Override
   public void process( Writer writer, String[] s ) throws IOException
   {
-    if ( processor != null )
-      processor.process( writer, s );
+    processChildren( writer, s );
   }
-
-  public void addElement( Processor p )
-  {
-    if ( processor != null )
-      throw new IllegalArgumentException( "Already has a processor." );
-    processor = p;
-  }  
 }

@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
+import uk.ac.leedsbeckett.lbufilters.GeneralFilter;
 import uk.ac.leedsbeckett.lbufilters.JsonPrettyPrint;
 import uk.ac.leedsbeckett.lbufilters.JsonToXml;
 import uk.ac.leedsbeckett.lbufilters.NormaliseProperties;
@@ -88,6 +89,7 @@ public class Demo
       Demo.unpack( "sample.xml", dir );
       Demo.unpack( "sample.xsl", dir );
       Demo.unpack( "findreplace.xsl", dir );
+      Demo.unpack( "spec.xml", dir );
     }
     catch ( IOException ex )
     {
@@ -103,17 +105,23 @@ public class Demo
 //      testFilter( JsonToXml.class.getConstructor( Reader.class ), 
 //                  "sample.json", StandardCharsets.UTF_8, 
 //                   "sample.json.xml", StandardCharsets.UTF_8, null );
-      testFilter( NormaliseProperties.class.getConstructor( Reader.class ), 
-                  "sample.properties", StandardCharsets.ISO_8859_1, 
-                   "nomalised.properties", StandardCharsets.UTF_8, null );
-      testFilter( PropertiesToXml.class.getConstructor( Reader.class ), 
-                  "sample.properties", StandardCharsets.ISO_8859_1, 
-                   "sample.properties.xml", StandardCharsets.UTF_8, null );
+//      testFilter( NormaliseProperties.class.getConstructor( Reader.class ), 
+//                  "sample.properties", StandardCharsets.ISO_8859_1, 
+//                   "nomalised.properties", StandardCharsets.UTF_8, null );
+//      testFilter( PropertiesToXml.class.getConstructor( Reader.class ), 
+//                  "sample.properties", StandardCharsets.ISO_8859_1, 
+//                   "sample.properties.xml", StandardCharsets.UTF_8, null );
+//      Parameter p = new Parameter();
+//      p.setName( "transform" );
+//      p.setValue( "test/findreplace.xsl" );
+//      testFilter( Xslt.class.getConstructor( Reader.class ), 
+//                  "sample.properties.xml", StandardCharsets.UTF_8, 
+//                   "sample.edited.properties", StandardCharsets.ISO_8859_1, p );
       Parameter p = new Parameter();
-      p.setName( "transform" );
-      p.setValue( "test/findreplace.xsl" );
-      testFilter( Xslt.class.getConstructor( Reader.class ), 
-                  "sample.properties.xml", StandardCharsets.UTF_8, 
+      p.setName( "specification" );
+      p.setValue( "test/spec.xml" );
+      testFilter( GeneralFilter.class.getConstructor( Reader.class ), 
+                  "sample.properties", StandardCharsets.ISO_8859_1, 
                    "sample.edited.properties", StandardCharsets.ISO_8859_1, p );
 //      p = new Parameter();
 //      p.setName( "transform" );

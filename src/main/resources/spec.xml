@@ -1,26 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tokenise>
-  <delimeter value=""/>
-  <delimeter value=""/>
-  <delimeter value=""/>
-  <switch>
-    <when match="is an entry">
-      <split spec="split on first =">
-        <index from="1" to="1">
-          <copy/>
-        </index>
-        <index from="2" to="2">
-          <sequence>
-            <replace match="" with=""/>
-          </sequence>
-        </index>
-        <index from="3">
-          <copy/>   
-        </index>
-      </split>
+  <!-- The properties files use all sorts of line delimiters although they ought to be consistent. -->
+  <!-- So accept any of newline (usual for unix), carriage return (usual for older Apple OSs) and  -->
+  <!-- carriage return - newline combination (usual for DOS and Windows).                          -->
+  <delimiter value="&#x0d;&#x0a;"/>
+  <delimiter value="&#x0d;"/>
+  <delimiter value="&#x0a;"/>
+  <!-- Each line has been divided into the line content and optionally the line delimiter -->
+  
+  <!-- First process the line content -->
+  <choose from="0" to="0">
+    <!-- When the line content is a comment... -->
+    <when>
+      <or>
+        <!-- Zero or more tabs/spaces + hash, followed by anything up to end of content. -->
+        <matches spec="^[ \t]*#.*$"/>
+        <!-- Any content that has only tabs/spaces in it from start to end.              -->
+        <matches spec="^[ \t]*$"/>
+        <!-- Does not contain an unescaped equals sign - which would be invalid property -->
+        <!-- <not><matches spec="(?&lt;!s)="/></not> -->
+      </or>
+      <!-- Output the content without change. -->
+      <output/>
     </when>
+
+    <when>
+      <not><matches spec="^.*(?&lt;!\\)=.*$"/></not>
+      <literal># ERROR LINE: </literal><output/>
+    </when>
+    
+    <!-- Should be valid property line so... -->
     <otherwise>
-      <copy/>
+      <!-- Split the content into the property name (including the following =) and the value -->
+      <!-- The spec uses reg ex forward reference to ensure the '=' isn't lost in the split -->
+      <!-- The limit of '2' is used to ensure that the value isn't split if it contains an '=' -->
+      <split spec="((?&lt;==))" limit="2">
+        <choose>
+          <!-- When the property name matches certain criteria... -->
+          <when>
+            <or>
+              <!-- Property names (index 0) that have 'xythosmetadata.' at the start -->
+              <!-- This because the word organization does not refer to BB Learn orgs here -->
+              <matches index="0" spec="^xythosmetadata\..*"/>
+              <!-- Add other specs to exclude more properties -->
+            </or>
+            <!-- Output the name and value pair unchanged -->
+            <output from="0" to="1"/>
+          </when>          
+
+          <!-- But for most properties... -->
+          <otherwise>                
+            <!-- Output the property name (inc. '=') unchanged -->
+            <output from="0" to="0"/>
+            <!-- Find and replace multiple times in prop value -->
+            <replace from="1" to="1" match="module" with="portal channel">
+              <replace match="Module" with="Portal Channel">
+              <replace match="(?&lt;![\.@])course" with="module">
+              <replace match="Course(?!Assessment)" with="Module">
+              <replace match="group" with="sub-group">
+              <replace match="Group" with="Sub-group">
+              <replace match="an organi[sz]ation(?!al)" with="a course group">
+              <replace match="(?&lt;!\.)organi[sz]ation(?!al)" with="course group">
+              <replace match="Organi[sz]ation(?!al)" with="Course Group">
+              <replace match="orgs " with="c-grps">
+                <!-- Output the filtered property value -->
+                <output/> 
+              </replace>
+              </replace>
+              </replace>
+              </replace>
+              </replace>
+              </replace>
+              </replace>
+              </replace>
+              </replace>
+            </replace>
+          </otherwise>
+          
+        </choose>
+      </split>
     </otherwise>
-  </switch>
+  </choose>
+  <!-- Regardless of how the line content was processed, output the -->
+  <!-- line delimiter, if there is one. -->
+  <output from="1" to="1"/>
 </tokenise>
