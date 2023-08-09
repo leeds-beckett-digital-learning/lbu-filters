@@ -16,6 +16,7 @@
 package uk.ac.leedsbeckett.lbufilters;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,7 +28,33 @@ import org.w3c.dom.NodeList;
  */
 public class StringTransforms
 {
-
+  public static boolean matches( String regex, String value )
+  {
+    return Pattern.compile( regex ).matcher( value ).matches();
+  }
+  
+  public static String matchesAny( NodeList nl, String value )
+  {
+    if ( nl == null ) return "no";
+    if ( nl.getLength() == 0 ) return "no";
+    ArrayList<String> specs=new ArrayList<>();
+    for ( int i=0; i<nl.getLength(); i++ )
+    {
+      String t = nl.item( i ).getTextContent();
+      if ( t == null || t.length() == 0 )
+      {
+        //System.err.println( "Node in list is empty" );
+        throw new IllegalArgumentException( "Node in list is empty" );
+      }
+      specs.add( t );
+    }
+    if ( specs.isEmpty() ) return "no";
+    for ( String regex : specs )
+      if ( Pattern.compile( regex ).matcher( value ).matches() )
+        return "match";
+    return "no";
+  }
+  
   public static String jsonString( String s )
   {
     StringBuilder hex = new StringBuilder();
@@ -69,34 +96,32 @@ public class StringTransforms
     return sb.toString();
   }
   
-  public static String multiReplace( String source, NodeList o )
+  public static String multiReplace( String source, NodeList nl, String prefix, String suffix )
   {
-    if ( o == null ) return "Can't find replace. No patterns object provided.";
-    if ( o.getLength() != 1 ) return "Can't find replace. Need single item node list.";
-    Node n = o.item( 0 );
-    if ( n.getNodeType() != Node.ELEMENT_NODE ) return "Can't find replace. Node is not an element.";
-    NodeList nl = n.getChildNodes();
+    if ( nl == null ) return "Can't find replace. No list provided.";
+    if ( nl.getLength() == 0 ) return "Can't find replace. Empty list.";
     ArrayList<Element> children=new ArrayList<>();
     for ( int i=0; i<nl.getLength(); i++ )
     {
       if ( nl.item( i ).getNodeType() == Node.ELEMENT_NODE )
         children.add( (Element)nl.item( i ) );
     }
-    if ( children.size() == 0 ) return "Can't find replace. Node does not contain any pattern elements.";
+    if ( children.isEmpty() ) return "Can't find replace. Node does not contain any pattern elements.";
     
     String current=source;
+    String next;
     String from, to;
     for ( Element pattern : children )
     {
-      nl = pattern.getElementsByTagName( "from" );
-      if ( nl.getLength() != 1 ) return "Can't find replace. Pattern must contain one from element.";
-      from = nl.item( 0 ).getTextContent();
-      if ( from == null || from.length() == 0 ) return "Can't find replace. Element from must contain some text.";
-      nl = pattern.getElementsByTagName( "to" );
-      if ( nl.getLength() != 1 ) return "Can't find replace. Pattern must contain one to element.";
-      to = nl.item( 0 ).getTextContent();
-      if ( to == null || to.length() == 0 ) return "Can't find replace. Element to must contain some text.";
-      current = current.replace( from, to );
+      from = prefix + pattern.getAttribute( "match" ) + suffix;
+      to   = pattern.getAttribute( "with" );
+      //System.err.println( "Matching " + from );
+      next = current.replaceAll( from, to );
+      if ( !next.equals( current ) )
+      {
+        //System.err.println( "Changed [" + current + "] to [" + next + "]" );
+        current = next;
+      }
     }
     
     return current;

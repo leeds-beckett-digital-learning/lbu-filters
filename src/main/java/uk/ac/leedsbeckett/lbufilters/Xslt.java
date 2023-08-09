@@ -90,12 +90,12 @@ public class Xslt extends ChunkedFilterReader implements Parameterizable
     spf.setNamespaceAware( true );
     SAXParser sp = spf.newSAXParser();
     InputSource s = new InputSource( new NoCloseReaderWrapper( in ) );
-    System.out.println( "Saxsource getXMLReader " + sp.getXMLReader() );
+    //System.out.println( "Saxsource getXMLReader " + sp.getXMLReader() );
     sp.getXMLReader().setEntityResolver( new EntityResolver(){
         @Override
         public InputSource resolveEntity( String publicId, String systemId ) throws SAXException, IOException
         {
-          System.err.println( "publicId = [" + publicId + "] systemId = [" + systemId + "]" );
+          //System.err.println( "publicId = [" + publicId + "] systemId = [" + systemId + "]" );
           if ( systemId == null )
             return null;
           if ( !systemId.startsWith( "http:" ) && !systemId.startsWith( "https:" ) ) 
@@ -107,7 +107,7 @@ public class Xslt extends ChunkedFilterReader implements Parameterizable
 
 
       TransformerFactory tFactory = TransformerFactory.newInstance();
-      System.err.println( "TransformerFactory = " + tFactory.getClass().toString() );
+      //System.err.println( "TransformerFactory = " + tFactory.getClass().toString() );
 
       // Cannot do this in ant because of Java security settings
       //tFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false );
